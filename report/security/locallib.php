@@ -41,6 +41,7 @@ function report_security_get_issue_list() {
     return array(
         'report_security_check_unsecuredataroot',
         'report_security_check_displayerrors',
+        'report_security_check_debugging',
         'report_security_check_vendordir',
         'report_security_check_nodemodules',
         'report_security_check_noauth',
@@ -271,6 +272,37 @@ function report_security_check_displayerrors($detailed=false) {
 
     if ($detailed) {
         $result->details = get_string('check_displayerrors_details', 'report_security');
+    }
+
+    return $result;
+}
+
+/**
+ * Verifies error debugging
+ * because in production it can reveal senstive information about server
+ * @param bool $detailed
+ * @return object result
+ */
+function report_security_check_debugging($detailed=false) {
+    $result = new stdClass();
+    $result->issue   = 'report_security_check_debugging';
+    $result->name   = get_string('check_debugging_name', 'report_security');
+    $result->info    = null;
+    $result->details = null;
+    $result->status  = null;
+    $result->link    = null;
+
+    
+    if (!defined('WARN_DISPLAY_ERRORS_ENABLED') && ini_get_bool('display_errors')) {
+        $result->status = REPORT_SECURITY_WARNING;
+        $result->info   = get_string('check_debugging_error', 'report_security');
+    } else {
+        $result->status = REPORT_SECURITY_OK;
+        $result->info   = get_string('check_debugging_ok', 'report_security');
+    }
+    
+    if ($detailed) {
+        $result->details = get_string('check_debugging_details', 'report_security');
     }
 
     return $result;

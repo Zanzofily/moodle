@@ -557,11 +557,11 @@ class core_admin_renderer extends plugin_renderer_base {
      * @return string HTML to output.
      */
     protected function display_errors_warning($errorsdisplayed) {
-        if (!$errorsdisplayed) {
+        if(ini_get_bool('display_errors')) {
+            return $errorsdisplayed ? $this->warning(get_string('displayerrorswarning', 'admin')) :  $this->warning(get_string('check_debugging_details', 'admin'));
+        } else {
             return '';
         }
-
-        return $this->warning(get_string('displayerrorswarning', 'admin'));
     }
 
     /**
